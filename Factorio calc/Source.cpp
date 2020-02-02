@@ -76,7 +76,11 @@ int main() {
 	while (true) {
 		cout << "Node: ";
 		getline(cin, lineIn);
-		if (lineIn == "") break;
+		if (lineIn == "") {
+			if (nodes.size() != 0)
+				break;
+			continue;
+		}
 		
 		string name = lineIn.substr(0, lineIn.find_first_of(' '));
 		if (findItem(name).is_null()) {
