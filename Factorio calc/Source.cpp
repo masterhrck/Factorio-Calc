@@ -1,4 +1,3 @@
-//Hrvoje Lucianovic
 #include <iostream>
 #include <fstream>
 #include <vector>
