@@ -143,11 +143,11 @@ int main() {
 		lineB += nodes[i].name;
 
 		if (nodes[i].assemblers != 0) {
-			lineB += " (";
+			lineB += " [";
 			string niceAss = to_string(round(nodes[i].assemblers * 10) / 10);
 			niceAss = niceAss.substr(0, niceAss.find(".") + 2);
 			lineB += niceAss;
-			lineB += "x)";
+			lineB += "x]";
 		}
 
 		lineB += " (";
