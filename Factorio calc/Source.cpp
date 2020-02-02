@@ -31,14 +31,29 @@ public:
 };
 
 int main() {
+	string lineIn;
+
 	//Load json file to j
 	fstream jfile;
-	jfile.open("list.json");
-	jfile >> j;
+	try {
+		jfile.open("list.json");
+	}
+	catch (exception e) {
+		cout << "Error: cannot open file \"list.json\"" << endl;
+		getline(cin, lineIn);
+		return 0;
+	}
+	try {
+		jfile >> j;
+	}
+	catch (exception e) {
+		cout << "Error: JSON parsing failed";
+		getline(cin, lineIn);
+		return 0;
+	}
 	jfile.close();
 
 	//Speed input
-	string lineIn;
 	float speed = 0;
 	do {
 		cout << "Speed: ";
@@ -180,5 +195,6 @@ int main() {
 	}
 	cout << endl << border << endl;
 	getline(cin, lineIn);
+
 	return 0;
 }
