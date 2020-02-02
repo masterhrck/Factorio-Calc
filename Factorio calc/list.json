@@ -1,0 +1,28 @@
+[
+	{
+		"name": "gear",
+		"time": 0.5,
+		"nOut": 1,
+		"ingr": [
+			{
+				"name": "iron",
+				"n": 2
+			}
+		]
+	},
+	{
+		"name": "red_pot",
+		"time": 5,
+		"nOut": 1,
+		"ingr": [
+			{
+				"name": "copper",
+				"n": 1
+			},
+			{
+				"name": "gear",
+				"n": 1
+			}
+		]
+	}
+]
