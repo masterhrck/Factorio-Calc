@@ -61,10 +61,18 @@ int main() {
 		cout << "Node: ";
 		getline(cin, lineIn);
 		if (lineIn == "") break;
+		
 		string name = lineIn.substr(0, lineIn.find_first_of(' '));
 		if (findItem(name).is_null()) {
 			cout << "Error: item not in database" << endl;
 			continue;
+		}
+		if (lineIn.find_first_of(' ')==-1) {
+			string lineIn2;
+			cout << "Enter rate for " << name << ": ";
+			getline(cin, lineIn2);
+			lineIn += " ";
+			lineIn += lineIn2;
 		}
 		float rate;
 		try {
