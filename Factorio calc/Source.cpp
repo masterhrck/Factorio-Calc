@@ -2,6 +2,7 @@
 #include <fstream>
 #include <vector>
 #include <nlohmann/json.hpp>
+#include <string>
 
 using namespace std;
 using json = nlohmann::json;
@@ -44,7 +45,7 @@ int main() {
 		getline(cin, lineIn);
 		if (lineIn == "") {
 			speed = defaultSpeed;
-			cout << "Using default speed: " << defaultSpeed << endl;
+			cout << "Using default speed: " << defaultSpeed << endl << endl;
 		}
 		else {
 			try { speed = stof(lineIn); }
@@ -84,7 +85,7 @@ int main() {
 		}
 
 		nodes.push_back(Node(name, rate));
-		cout << "Ok" << endl;
+		cout << endl;
 	}
 
 	//Searching for dependencies, inserting to array
@@ -128,6 +129,7 @@ int main() {
 	}
 
 	//Print
+	vector<string> output;
 	for (unsigned int i = 0; i < nodes.size(); i++) {
 		int indents = max(0, nodes[i].level * 4 - 3);
 		string lineB(indents, ' ');
@@ -164,8 +166,19 @@ int main() {
 		lineB += niceRate;
 		lineB += "/m)";
 
-		cout << lineA << endl << lineB << endl;
+		output.push_back(lineA);
+		output.push_back(lineB);
 	}
+	int maxLineLen = 0;
+	for (string line : output) {
+		maxLineLen = max(maxLineLen, (int)line.size());
+	}
+	string border(maxLineLen, '=');
+	cout << endl << border << endl;
+	for (string line : output) {
+		cout << line << endl;
+	}
+	cout << endl << border << endl;
 	getline(cin, lineIn);
 	return 0;
 }
