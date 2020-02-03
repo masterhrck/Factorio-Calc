@@ -141,6 +141,7 @@
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="factorio command.lua" />
     <None Include="packages.config" />
     <None Include="recipes.json" />
   </ItemGroup>
