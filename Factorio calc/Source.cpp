@@ -78,13 +78,13 @@ int main() {
 				break;
 			continue;
 		}
-		
+
 		string name = lineIn.substr(0, lineIn.find_first_of(' '));
 		if (j[name].is_null()) {
 			cout << "Error: item not in database" << endl;
 			continue;
 		}
-		if (lineIn.find_first_of(' ')==-1) {
+		if (lineIn.find_first_of(' ') == -1) {
 			string lineIn2;
 			cout << "Enter rate for " << name << ": ";
 			getline(cin, lineIn2);
@@ -127,7 +127,7 @@ int main() {
 	for (Node node : nodes) {
 		maxLevel = max(maxLevel, node.level);
 	}
-	
+
 	//Iterating from end to beginning
 	vector<bool> lastActiveL(maxLevel + 1, false);
 	for (unsigned int i = nodes.size() - 1; i > 0; i--) {
@@ -148,7 +148,7 @@ int main() {
 		string lineB(indents, ' ');
 
 		for (int lvl = 1; lvl < nodes[i].activeL.size(); lvl++) {
-			int pos = max(0, (lvl-1) * 4);
+			int pos = max(0, (lvl - 1) * 4);
 			if (nodes[i].activeL[lvl]) {
 				lineB[pos] = '|';
 			}
