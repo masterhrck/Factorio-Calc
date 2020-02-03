@@ -10,14 +10,6 @@ json j;
 
 constexpr float defaultSpeed = 0.5;
 
-json findItem(string name) {
-	for (json item : j) {
-		if (item["name"] == name)
-			return item;
-	}
-	return json();
-}
-
 class Node {
 public:
 	string name;
@@ -36,7 +28,7 @@ int main() {
 	//Load json file to j
 	fstream jfile;
 	try {
-		jfile.open("list.json");
+		jfile.open("recipes.json");
 	}
 	catch (exception e) {
 		cout << "Error: cannot open file \"list.json\"" << endl;
@@ -83,7 +75,7 @@ int main() {
 		}
 		
 		string name = lineIn.substr(0, lineIn.find_first_of(' '));
-		if (findItem(name).is_null()) {
+		if (j[name].is_null()) {
 			cout << "Error: item not in database" << endl;
 			continue;
 		}
@@ -109,12 +101,12 @@ int main() {
 
 	//Searching for dependencies, inserting to array
 	for (unsigned int i = 0; i < nodes.size(); i++) {
-		json res = findItem(nodes[i].name);
+		json res = j[nodes[i].name];
 		if (!res.is_null()) {
 			float time = res["time"];
-			int nOut = res["nOut"];
-			for (json ingr : res["ingr"]) {
-				int n = ingr["n"];
+			int nOut = res["products"][0]["amount"];
+			for (json ingr : res["ingredients"]) {
+				int n = ingr["amount"];
 				string name = ingr["name"];
 				float rate = (nodes[i].rate * n) / nOut;
 				Node node = Node(name, rate);
@@ -153,16 +145,17 @@ int main() {
 		int indents = max(0, nodes[i].level * 4 - 3);
 		string lineB(indents, ' ');
 
-		for (int lvl = 0; lvl < activeL[i].size(); lvl++) {
-			if (activeL[i][lvl]) {
-				lineB[max(0, lvl * 4)] = '|';
+		for (int lvl = 1; lvl < nodes[i].activeL.size(); lvl++) {
+			int pos = max(0, (lvl-1) * 4);
+			if (nodes[i].activeL[lvl]) {
+				lineB[pos] = '|';
 			}
 		}
 
 		string lineA = lineB;
 		if (nodes[i].level > 0) {
 			int pos = max(0, (nodes[i].level - 1) * 4);
-			if (isLast[i])
+			if (nodes[i].isLast)
 				lineB[pos] = '\\';
 			else
 				lineB[pos] = '+';
