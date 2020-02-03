@@ -187,10 +187,10 @@ int main() {
 	for (string line : output) {
 		maxLineLen = max(maxLineLen, (int)line.size());
 	}
-	string border(maxLineLen, '=');
+	string border(maxLineLen + 4, '=');
 	cout << endl << border << endl;
 	for (string line : output) {
-		cout << line << endl;
+		cout << "  " << line << endl;
 	}
 	cout << endl << border << endl;
 	getline(cin, lineIn);
