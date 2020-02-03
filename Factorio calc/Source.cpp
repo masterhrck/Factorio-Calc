@@ -16,6 +16,8 @@ public:
 	float rate;
 	int level = 0;
 	float assemblers = 0;
+	vector<bool> activeL;
+	bool isLast;
 	Node(string n, float r) {
 		name = n;
 		rate = r;
@@ -122,21 +124,18 @@ int main() {
 	for (Node node : nodes) {
 		maxLevel = max(maxLevel, node.level);
 	}
-	vector<vector<bool>> activeL;
-	activeL.push_back(vector<bool>(maxLevel + 1, false));
-	vector<bool> isLast(nodes.size(), false);
-	isLast[nodes.size() - 1] = true;
-	for (unsigned int i = 1; i < nodes.size(); i++) {
-		activeL.push_back(activeL[i - 1]);
-		//Povecanje levela
-		if (nodes[i - 1].level < nodes[i].level) {
-			activeL[i][nodes[i - 1].level] = true;
+	
+	//Iterating from end to beginning
+	vector<bool> lastActiveL(maxLevel + 1, false);
+	for (unsigned int i = nodes.size() - 1; i > 0; i--) {
+		nodes[i].activeL = lastActiveL;
+		if (nodes[i].activeL[nodes[i].level] == false)
+			nodes[i].isLast = true;
+		nodes[i].activeL[nodes[i].level] = true;
+		for (int lvl = nodes[i].level + 1; lvl < nodes[i].activeL.size(); lvl++) {
+			nodes[i].activeL[lvl] = false;
 		}
-		//Smanjenje levela
-		else if (nodes[i - 1].level > nodes[i].level) {
-			activeL[i][nodes[i - 1].level - 1] = false;
-			isLast[i - 1] = true;
-		}
+		lastActiveL = nodes[i].activeL;
 	}
 
 	//Print
