@@ -24,6 +24,13 @@ public:
 	}
 };
 
+void err(string text) {
+	cout << "Error: " << text << endl;
+	string line;
+	getline(cin, line);
+	exit(EXIT_FAILURE);
+}
+
 int main() {
 	string lineIn;
 
@@ -33,17 +40,13 @@ int main() {
 		jfile.open("recipes.json");
 	}
 	catch (exception e) {
-		cout << "Error: cannot open file \"list.json\"" << endl;
-		getline(cin, lineIn);
-		return 0;
+		err("Cannot open JSON file");
 	}
 	try {
 		jfile >> j;
 	}
 	catch (exception e) {
-		cout << "Error: JSON parsing failed";
-		getline(cin, lineIn);
-		return 0;
+		err("JSON parsing failed");
 	}
 	jfile.close();
 
