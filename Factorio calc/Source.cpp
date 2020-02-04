@@ -25,9 +25,8 @@ public:
 };
 
 void err(string text) {
-	cout << "Error: " << text << endl;
-	string line;
-	getline(cin, line);
+	cout << "Error: " << text << endl << endl;
+	system("pause");
 	exit(EXIT_FAILURE);
 }
 
@@ -40,7 +39,7 @@ int main() {
 		jfile.open("recipes.json");
 	}
 	catch (exception e) {
-		err("Cannot open JSON file");
+		err("Cannot find JSON file");
 	}
 	try {
 		jfile >> j;

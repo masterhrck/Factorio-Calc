@@ -21,16 +21,15 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="recipes.json">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="factorio command.lua">
-      <Filter>Source Files</Filter>
-    </None>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="list.json">
+    <Text Include="factorio command.txt">
       <Filter>Source Files</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="recipes.json">
+      <Filter>Source Files</Filter>
+    </CopyFileToFolders>
   </ItemGroup>
 </Project>

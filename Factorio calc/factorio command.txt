@@ -1,4 +1,5 @@
 /c
+
 local out = ""
 
 function write(...)
