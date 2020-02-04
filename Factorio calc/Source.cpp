@@ -7,6 +7,7 @@
 using namespace std;
 using json = nlohmann::json;
 json j;
+float speed = 0;
 
 constexpr float defaultSpeed = 0.5;
 
@@ -30,6 +31,15 @@ void err(string text) {
 	exit(EXIT_FAILURE);
 }
 
+void printHeader(vector<Node> &nodes) {
+	system("cls");
+	cout << "-------- Selected --------" << endl << endl;
+	for (auto node : nodes) {
+		cout << "-> " << node.name << " (" << node.rate << "/m)" << endl << endl;
+	}
+	cout << "------- Speed: " << speed << " -------" << endl;
+}
+
 int main() {
 	string lineIn;
 
@@ -50,13 +60,11 @@ int main() {
 	jfile.close();
 
 	//Speed input
-	float speed = 0;
 	do {
 		cout << "Speed: ";
 		getline(cin, lineIn);
 		if (lineIn == "") {
 			speed = defaultSpeed;
-			cout << "Using default speed: " << defaultSpeed << endl << endl;
 		}
 		else {
 			try { speed = stof(lineIn); }
@@ -66,11 +74,11 @@ int main() {
 		}
 	} while (speed == 0);
 
-
 	//Nodes input
 	vector<Node> nodes;
+	printHeader(nodes);
 	while (true) {
-		cout << "Node: ";
+		cout << endl << "Node: ";
 		getline(cin, lineIn);
 		if (lineIn == "") {
 			if (nodes.size() != 0)
@@ -83,9 +91,10 @@ int main() {
 			cout << "Error: item not in database" << endl;
 			continue;
 		}
+		//Rate second chance
 		if (lineIn.find_first_of(' ') == -1) {
 			string lineIn2;
-			cout << "Enter rate for " << name << ": ";
+			cout << "Rate: ";
 			getline(cin, lineIn2);
 			lineIn += " ";
 			lineIn += lineIn2;
@@ -100,8 +109,10 @@ int main() {
 		}
 
 		nodes.push_back(Node(name, rate));
-		cout << endl;
+		printHeader(nodes);
 	}
+
+	auto displayNodes = nodes;
 
 	//Searching for dependencies, inserting to array
 	for (unsigned int i = 0; i < nodes.size(); i++) {
@@ -126,7 +137,6 @@ int main() {
 	for (Node node : nodes) {
 		maxLevel = max(maxLevel, node.level);
 	}
-
 	//Iterating from end to beginning
 	vector<bool> lastActiveL(maxLevel + 1, false);
 	for (unsigned int i = nodes.size() - 1; i > 0; i--) {
@@ -140,7 +150,7 @@ int main() {
 		lastActiveL = nodes[i].activeL;
 	}
 
-	//Print
+	//Printing to array
 	vector<string> output;
 	for (unsigned int i = 0; i < nodes.size(); i++) {
 		int indents = max(0, nodes[i].level * 4 - 3);
@@ -179,20 +189,19 @@ int main() {
 		lineB += niceRate;
 		lineB += "/m)";
 
+		if (nodes[i].level == 0)
+			output.push_back("");
 		output.push_back(lineA);
 		output.push_back(lineB);
 	}
-	int maxLineLen = 0;
-	for (string line : output) {
-		maxLineLen = max(maxLineLen, (int)line.size());
-	}
-	string border(maxLineLen + 4, '=');
-	cout << endl << border << endl;
+
+	//Printing
+	printHeader(displayNodes);
 	for (string line : output) {
 		cout << "  " << line << endl;
 	}
-	cout << endl << border << endl;
-	getline(cin, lineIn);
+	cout << endl << endl;
+	system("pause");
 
 	return 0;
 }
