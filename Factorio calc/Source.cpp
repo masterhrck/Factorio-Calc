@@ -40,6 +40,27 @@ void printHeader(vector<Node> &nodes) {
 	cout << "------- Speed: " << speed << " -------" << endl;
 }
 
+void printSuggestions(string query) {
+	vector<string> names;
+	for (auto it : j.items()) {
+		if (it.key().find(query) != -1) {
+			if(!it.value().is_null())
+				names.push_back(it.key());
+		}
+	}
+	//Print
+	if (names.size() == 0) {
+		cout << "No suggestions found" << endl;
+	}
+	else {
+		cout << "Suggestions:" << endl;
+		for (auto name : names) {
+			cout << "  " << name << endl;
+		}
+	}
+	return;
+}
+
 int main() {
 	string lineIn;
 
@@ -89,6 +110,7 @@ int main() {
 		string name = lineIn.substr(0, lineIn.find_first_of(' '));
 		if (j[name].is_null()) {
 			cout << "Error: item not in database" << endl;
+			printSuggestions(name);
 			continue;
 		}
 		//Rate second chance
