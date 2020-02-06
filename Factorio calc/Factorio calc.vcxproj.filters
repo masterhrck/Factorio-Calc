@@ -26,6 +26,9 @@
     <Text Include="factorio command.txt">
       <Filter>Source Files</Filter>
     </Text>
+    <Text Include="TODO.txt">
+      <Filter>Source Files</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="recipes.json">
