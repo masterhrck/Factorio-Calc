@@ -31,7 +31,7 @@ void err(string text) {
 	exit(EXIT_FAILURE);
 }
 
-void printHeader(vector<Node> &nodes) {
+void printHeader(vector<Node>& nodes) {
 	system("cls");
 	cout << "-------- Selected --------" << endl << endl;
 	for (auto node : nodes) {
@@ -44,7 +44,7 @@ void printSuggestions(string query) {
 	vector<string> names;
 	for (auto it : j.items()) {
 		if (it.key().find(query) != -1) {
-			if(!it.value().is_null())
+			if (!it.value().is_null())
 				names.push_back(it.key());
 		}
 	}
@@ -80,20 +80,48 @@ int main() {
 	}
 	jfile.close();
 
+	//Assembler type input
+	cout << "Assembler type: " << endl
+		<< "(1) Assembling machine 1" << endl
+		<< "(2) Assembling machine 2" << endl
+		<< "(3) Assembling machine 3" << endl
+		<< "> ";
+	int assType = 0;
+	while (assType < 1 || assType > 3) {
+		cin >> assType;
+	}
+
 	//Speed input
+	int speedBonus = -1;
 	do {
-		cout << "Speed: ";
+		cout << endl << "Speed bonus (%): ";
+		cin.ignore();
 		getline(cin, lineIn);
-		if (lineIn == "") {
-			speed = defaultSpeed;
-		}
-		else {
-			try { speed = stof(lineIn); }
+		if (lineIn != "") {
+			try { speedBonus = stoi(lineIn); }
 			catch (exception e) {
-				cout << "Error: not a float" << endl;
+				cout << "Error: not an int" << endl;
 			}
 		}
-	} while (speed == 0);
+		else {
+			speedBonus = 0;
+		}
+
+	} while (speedBonus == -1);
+
+	switch (assType) {
+	case 1:
+		speed = 0.5;
+		break;
+	case 2:
+		speed = 0.75;
+		break;
+	case 3:
+		speed = 1.25;
+		break;
+	}
+
+	speed = speed * (100 + speedBonus) / 100;
 
 	//Nodes input
 	vector<Node> nodes;

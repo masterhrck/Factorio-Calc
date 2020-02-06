@@ -1,1 +1,1 @@
-- Interface za dodavanje modula (brzina, produktivnost itd)
+- Auto choose za jedini suggestion
