@@ -40,7 +40,7 @@ void printHeader(vector<Node>& nodes) {
 	cout << "------- Speed: " << speed << " -------" << endl;
 }
 
-void printSuggestions(string query) {
+string printSuggestions(string query) {
 	vector<string> names;
 	for (auto it : j.items()) {
 		if (it.key().find(query) != -1) {
@@ -52,13 +52,17 @@ void printSuggestions(string query) {
 	if (names.size() == 0) {
 		cout << "No suggestions found" << endl;
 	}
+	else if (names.size() == 1) {
+		cout << "Using suggestion: " << names[0] << endl;
+		return names[0];
+	}
 	else {
 		cout << "Suggestions:" << endl;
 		for (auto name : names) {
 			cout << "  " << name << endl;
 		}
 	}
-	return;
+	return "";
 }
 
 int main() {
@@ -137,9 +141,11 @@ int main() {
 
 		string name = lineIn.substr(0, lineIn.find_first_of(' '));
 		if (j[name].is_null()) {
-			cout << "Error: item not in database" << endl;
-			printSuggestions(name);
-			continue;
+
+			cout << "Item not in database" << endl;
+			name = printSuggestions(name);
+			if(name=="")
+				continue;
 		}
 		//Rate second chance
 		if (lineIn.find_first_of(' ') == -1) {
