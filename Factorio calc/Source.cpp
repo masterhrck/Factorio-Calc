@@ -45,7 +45,7 @@ string printSuggestions(string query) {
 	vector<string> names;
 	for (auto it : j.items()) {
 		if (it.key().find(query) != -1) {
-			if (!it.value().is_null())
+			if (!it.value().is_null() && (it.value()["category"] == "crafting"))
 				names.push_back(it.key());
 		}
 	}
@@ -149,7 +149,7 @@ int main() {
 		}
 
 		string name = lineIn.substr(0, lineIn.find_first_of(' '));
-		if (j[name].is_null()) {
+		if (j[name].is_null() || !(j[name]["category"]=="crafting")) {
 			if (isNumber(name)) {
 				int choice = stoi(name);
 				if (choice < 1 || choice > suggests.size()) {
@@ -200,7 +200,7 @@ int main() {
 	//Searching for dependencies, inserting to array
 	for (unsigned int i = 0; i < nodes.size(); i++) {
 		json res = j[nodes[i].name];
-		if (!res.is_null()) {
+		if (!res.is_null() && (res["category"] == "crafting")) {
 			float time = res["time"];
 			int nOut = res["products"][0]["amount"];
 			for (json ingr : res["ingredients"]) {
