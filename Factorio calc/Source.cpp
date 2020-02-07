@@ -8,6 +8,7 @@ using namespace std;
 using json = nlohmann::json;
 json j;
 float speed = 0;
+vector<string> suggests;
 
 constexpr float defaultSpeed = 0.5;
 
@@ -58,11 +59,19 @@ string printSuggestions(string query) {
 	}
 	else {
 		cout << "Suggestions:" << endl;
-		for (auto name : names) {
-			cout << "  " << name << endl;
+		suggests.clear();
+		for (int i = 0; i < names.size(); i++) {
+			cout << "(" << i + 1 << ") " << names[i] << endl;
+			suggests.push_back(names[i]);
 		}
 	}
 	return "";
+}
+
+bool isNumber(const string &s) {
+	string::const_iterator it = s.begin();
+	while (it != s.end() && std::isdigit(*it)) ++it;
+	return !s.empty() && it == s.end();
 }
 
 int main() {
@@ -131,7 +140,7 @@ int main() {
 	vector<Node> nodes;
 	printHeader(nodes);
 	while (true) {
-		cout << endl << "Node: ";
+		cout << endl << "Item name (and rate): ";
 		getline(cin, lineIn);
 		if (lineIn == "") {
 			if (nodes.size() != 0)
@@ -141,9 +150,26 @@ int main() {
 
 		string name = lineIn.substr(0, lineIn.find_first_of(' '));
 		if (j[name].is_null()) {
+			if (isNumber(name)) {
+				int choice = stoi(name);
+				if (choice < 1 || choice > suggests.size()) {
+					if (suggests.size() == 0)
+						cout << "No choices available" << endl;
+					else
+						cout << "Invalid choice" << endl;
 
-			cout << "Item not in database" << endl;
-			name = printSuggestions(name);
+					name = "";
+				}
+				else {
+					name = suggests[choice - 1];
+					cout << "(" << choice << ") " << name << endl;
+				}
+			}
+			else {
+				cout << "Item not in database" << endl;
+				name = printSuggestions(name);
+			}
+			//If Failure to get good name
 			if(name=="")
 				continue;
 		}
@@ -166,6 +192,7 @@ int main() {
 
 		nodes.push_back(Node(name, rate));
 		printHeader(nodes);
+		suggests.clear();
 	}
 
 	auto displayNodes = nodes;
