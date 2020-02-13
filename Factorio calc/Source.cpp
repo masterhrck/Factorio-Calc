@@ -82,14 +82,14 @@ int main() {
 	try {
 		jfile.open("recipes.json");
 	}
-	catch (exception e) {
+	catch (...) {
 		err("Cannot find/open JSON file");
 	}
 
 	try {
 		jfile >> j;
 	}
-	catch (exception e) {
+	catch (...) {
 		err("JSON parsing failed");
 	}
 
@@ -99,22 +99,38 @@ int main() {
 	cout << "Assembler type: " << endl
 		<< "(1) Assembling machine 1" << endl
 		<< "(2) Assembling machine 2" << endl
-		<< "(3) Assembling machine 3" << endl
-		<< "> ";
-	int assType = 0;
-	while (assType < 1 || assType > 3) {
-		cin >> assType;
+		<< "(3) Assembling machine 3" << endl;
+	int assType;
+	while (true) {
+		assType = 0;
+		cout << "> ";
+		cin.clear();
+		getline(cin, lineIn);
+		try {
+			assType = stoi(lineIn);
+		}
+		catch (...) {
+			cout << "Error: not an int" << endl;
+			continue;
+		}
+		if (assType < 1 || assType > 3) {
+			cout << "Error: invalid choice" << endl;
+			continue;
+		}
+		else {
+			break;
+		}
 	}
 
 	//Speed bonus input
 	int speedBonus = -1;
 	do {
 		cout << endl << "Speed bonus (%): ";
-		cin.ignore();
+		cin.clear();
 		getline(cin, lineIn);
 		if (lineIn != "") {
 			try { speedBonus = stoi(lineIn); }
-			catch (exception e) {
+			catch (...) {
 				cout << "Error: not an int" << endl;
 			}
 		}
@@ -156,9 +172,9 @@ int main() {
 				int choice = stoi(name);
 				if (choice < 1 || choice > suggests.size()) {
 					if (suggests.size() == 0)
-						cout << "No choices available" << endl;
+						cout << "Error: no choices available" << endl;
 					else
-						cout << "Invalid choice" << endl;
+						cout << "Error: invalid choice" << endl;
 					continue;
 				}
 				else {
@@ -186,7 +202,7 @@ int main() {
 		try {
 			rate = stof(lineIn.substr(lineIn.find_first_of(' '), lineIn.length()));
 		}
-		catch (exception e) {
+		catch (...) {
 			cout << "Error: not a float" << endl;
 			continue;
 		}
