@@ -4,6 +4,8 @@
 #include <nlohmann/json.hpp>
 #include <string>
 
+#define FACTORIO_VERSION "0.18.3"
+
 using namespace std;
 using json = nlohmann::json;
 json j;
@@ -94,6 +96,9 @@ int main() {
 	}
 
 	jfile.close();
+
+	//Version info print
+	cout << "Valid for Factorio v" << FACTORIO_VERSION << endl << endl;
 
 	//Assembler type input
 	cout << "Assembler type: " << endl
