@@ -27,7 +27,7 @@ public:
 };
 
 void err(string text) {
-	cout << "Error: " << text << endl << endl;
+	cout << "Critical error: " << text << endl << endl;
 	system("pause");
 	exit(EXIT_FAILURE);
 }
@@ -35,7 +35,7 @@ void err(string text) {
 void printHeader(vector<Node>& nodes) {
 	system("cls");
 	cout << "-------- Selected --------" << endl << endl;
-	for (auto node : nodes) {
+	for (Node node : nodes) {
 		cout << "-> " << node.name << " (" << node.rate << "/m)" << endl << endl;
 	}
 	cout << "------- Speed: " << speed << " -------" << endl;
@@ -83,14 +83,16 @@ int main() {
 		jfile.open("recipes.json");
 	}
 	catch (exception e) {
-		err("Cannot find JSON file");
+		err("Cannot find/open JSON file");
 	}
+
 	try {
 		jfile >> j;
 	}
 	catch (exception e) {
 		err("JSON parsing failed");
 	}
+
 	jfile.close();
 
 	//Assembler type input
@@ -104,7 +106,7 @@ int main() {
 		cin >> assType;
 	}
 
-	//Speed input
+	//Speed bonus input
 	int speedBonus = -1;
 	do {
 		cout << endl << "Speed bonus (%): ";
@@ -134,13 +136,13 @@ int main() {
 		break;
 	}
 
-	speed = speed * (100 + speedBonus) / 100;
+	speed *= (100 + speedBonus) / 100;
 
 	//Nodes input
 	vector<Node> nodes;
 	printHeader(nodes);
 	while (true) {
-		cout << endl << "Item name (and rate): ";
+		cout << endl << "Item name [and rate]: ";
 		getline(cin, lineIn);
 		if (lineIn == "") {
 			if (nodes.size() != 0)
@@ -157,8 +159,7 @@ int main() {
 						cout << "No choices available" << endl;
 					else
 						cout << "Invalid choice" << endl;
-
-					name = "";
+					continue;
 				}
 				else {
 					name = suggests[choice - 1];
@@ -173,7 +174,7 @@ int main() {
 			if(name=="")
 				continue;
 		}
-		//Rate second chance
+		//Second chance for input of rate (if not specified in the same line as name)
 		if (lineIn.find_first_of(' ') == -1) {
 			string lineIn2;
 			cout << "Rate: ";
@@ -195,15 +196,15 @@ int main() {
 		suggests.clear();
 	}
 
-	auto displayNodes = nodes;
+	vector<Node> displayNodes = nodes;
 
 	//Searching for dependencies, inserting to array
 	for (unsigned int i = 0; i < nodes.size(); i++) {
-		json res = j[nodes[i].name];
-		if (!res.is_null() && (res["category"] == "crafting")) {
-			float time = res["time"];
-			int nOut = res["products"][0]["amount"];
-			for (json ingr : res["ingredients"]) {
+		json result = j[nodes[i].name];
+		if (!result.is_null() && (result["category"] == "crafting")) {
+			float time = result["time"];
+			int nOut = result["products"][0]["amount"];
+			for (json ingr : result["ingredients"]) {
 				int n = ingr["amount"];
 				string name = ingr["name"];
 				float rate = (nodes[i].rate * n) / nOut;
