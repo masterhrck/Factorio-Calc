@@ -152,7 +152,7 @@ int main() {
 		break;
 	}
 
-	speed *= (100 + speedBonus) / 100;
+	speed = speed * (100 + speedBonus) / 100;
 
 	//Nodes input
 	vector<Node> nodes;
