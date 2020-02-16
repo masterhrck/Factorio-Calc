@@ -5,22 +5,22 @@ VisualStudioVersion = 16.0.29709.97
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Factorio calc", "Factorio calc\Factorio calc.vcxproj", "{04E96254-2894-4C1A-9C96-EFB9DC5C0819}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Factorio calc Builder", "Factorio calc Builder\Factorio calc Builder.csproj", "{531DE8E0-354A-4D94-B6A9-4F740BEA4705}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
-		Debug|x86 = Debug|x86
 		Release|x64 = Release|x64
-		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{04E96254-2894-4C1A-9C96-EFB9DC5C0819}.Debug|x64.ActiveCfg = Debug|x64
 		{04E96254-2894-4C1A-9C96-EFB9DC5C0819}.Debug|x64.Build.0 = Debug|x64
-		{04E96254-2894-4C1A-9C96-EFB9DC5C0819}.Debug|x86.ActiveCfg = Debug|Win32
-		{04E96254-2894-4C1A-9C96-EFB9DC5C0819}.Debug|x86.Build.0 = Debug|Win32
 		{04E96254-2894-4C1A-9C96-EFB9DC5C0819}.Release|x64.ActiveCfg = Release|x64
 		{04E96254-2894-4C1A-9C96-EFB9DC5C0819}.Release|x64.Build.0 = Release|x64
-		{04E96254-2894-4C1A-9C96-EFB9DC5C0819}.Release|x86.ActiveCfg = Release|Win32
-		{04E96254-2894-4C1A-9C96-EFB9DC5C0819}.Release|x86.Build.0 = Release|Win32
+		{531DE8E0-354A-4D94-B6A9-4F740BEA4705}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{531DE8E0-354A-4D94-B6A9-4F740BEA4705}.Debug|x64.Build.0 = Debug|Any CPU
+		{531DE8E0-354A-4D94-B6A9-4F740BEA4705}.Release|x64.ActiveCfg = Release|Any CPU
+		{531DE8E0-354A-4D94-B6A9-4F740BEA4705}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
