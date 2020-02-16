@@ -8,91 +8,128 @@ using System.Diagnostics;
 
 namespace Factorio_calc_Builder
 {
-    public class HashEntry
-    {
-        public string filename;
-        public string hash;
-    }
-    class Program
-    {
-        
-        static void Main(string[] args)
-        {
-            string[] filenames = {
-                @"C:\Users\Masterhrck\Desktop\hashme.txt",
-                @"C:\Users\Masterhrck\Desktop\hashme2.txt",
-            };
-            string saveFilename = "hashes.xml";
-            string buildCommandFile = @"C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\IDE\devenv.exe";
-            string buildCommandArg = @"""C:\Users\Masterhrck\source\repos\Factorio calc\Factorio solution.sln"" /rebuild Release /project ""C:\Users\Masterhrck\source\repos\Factorio calc\Factorio calc\Factorio calc.vcxproj"" /projectconfig Release";
+	public class HashEntry
+	{
+		public string filename;
+		public string hash;
+	}
+	class Program
+	{
 
-            XmlSerializer ser = new XmlSerializer(typeof(List<HashEntry>));
+		static void Main(string[] args)
+		{
+			string targetDir = @"C:\Users\Masterhrck\source\repos\Factorio calc\Factorio calc";
+			string targetExe = @"C:\Users\Masterhrck\source\repos\Factorio calc\Factorio calc\Release\Factorio calc.exe";
+			string saveFilename = "hashes.xml";
+			string buildCommandFile = "cmd";
+			string buildCommandArg = @"/C """"C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\IDE\devenv.com"" ""C:\Users\Masterhrck\source\repos\Factorio calc\Factorio solution.sln"" /rebuild Release /project ""C:\Users\Masterhrck\source\repos\Factorio calc\Factorio calc\Factorio calc.vcxproj"" /projectconfig Release""";
+			XmlSerializer ser = new XmlSerializer(typeof(List<HashEntry>));
+			List<string> filenames = new List<string>();
 
-            //Generate new hash entries
-            MD5 md5 = MD5.Create();
-            List<HashEntry> newHashEntries = new List<HashEntry>();
-            foreach (string filename in filenames)
-            {
-                string hashString;
-                using (var stream = File.OpenRead(filename))
-                {
-                    byte[] hashByte = md5.ComputeHash(stream);
-                    hashString = BitConverter.ToString(hashByte).Replace("-", "").ToLowerInvariant();
-                }
-                newHashEntries.Add(new HashEntry { filename = filename, hash = hashString });
-            }
-            
-            //Read old hash entries from file
-            List<HashEntry> oldHashEntries = new List<HashEntry>();
-            using (TextReader reader = new StreamReader(saveFilename))
-            {
-                oldHashEntries = (List<HashEntry>)ser.Deserialize(reader);
-            }
+			{
+				DirectoryInfo dir = new DirectoryInfo(targetDir);
+				IEnumerable<FileInfo> files = dir.EnumerateFiles();
+				foreach (FileInfo file in files)
+				{
+					filenames.Add(file.FullName);
+				}
+			}
 
-            var query = from newHashes in newHashEntries
-                         join oldHashes in oldHashEntries on newHashes.filename equals oldHashes.filename into oldHashes
-                         from items in oldHashes.DefaultIfEmpty(new HashEntry { hash=String.Empty})
-                         select new { Filename = newHashes.filename, OldHash = items.hash, NewHash = newHashes.hash };
-            var results = query.ToList();
-            bool ok = true;
-            foreach(var result in results)
-            {
-                if (result.OldHash != result.NewHash)
-                    ok = false;
-                Console.WriteLine($"{(ok ? "OK" : "DIFF ")} {result.OldHash} {result.NewHash} {result.Filename}");
-            }
-            Console.WriteLine();
-            if (!ok)
-            {
-                using(Process process = new Process()){
-                    //TODO Feedback from builder, exception handling
-                    Console.WriteLine("Rebuilding executable..");
-                    process.StartInfo.UseShellExecute = false;
-                    process.StartInfo.FileName = buildCommandFile;
-                    process.StartInfo.Arguments = buildCommandArg;
+			//Generate new hash entries
+			Console.WriteLine("Generating hashes..");
+			MD5 md5 = MD5.Create();
+			List<HashEntry> newHashEntries = new List<HashEntry>();
+			foreach (string filename in filenames)
+			{
+				string hashString;
+				using (var stream = File.OpenRead(filename))
+				{
+					byte[] hashByte = md5.ComputeHash(stream);
+					hashString = BitConverter.ToString(hashByte).Replace("-", "").ToLowerInvariant();
+				}
+				newHashEntries.Add(new HashEntry { filename = filename, hash = hashString });
+			}
 
-                    process.Start();
-                    process.WaitForExit();
-                    Console.WriteLine("Done");
-                }
-            }
+			//Read old hash entries from file
+			List<HashEntry> oldHashEntries = new List<HashEntry>();
+			if (File.Exists(saveFilename))
+			{
+				Console.WriteLine("Reading old hashes..\n");
+				using (TextReader reader = new StreamReader(saveFilename))
+				{
+					oldHashEntries = (List<HashEntry>)ser.Deserialize(reader);
+				}
+			}
 
-            using (Process process = new Process())
-            {
-                //TODO Start factorio calc
-            }
+			//Compare old and new
+			var query = from newHashes in newHashEntries
+						join oldHashes in oldHashEntries on newHashes.filename equals oldHashes.filename into oldHashes
+						from items in oldHashes.DefaultIfEmpty(new HashEntry { hash = String.Empty })
+						select new { Filename = newHashes.filename, OldHash = items.hash, NewHash = newHashes.hash };
+			var results = query.ToList();
+			bool ok = true;
+			foreach (var result in results)
+			{
+				bool comp = result.OldHash == result.NewHash;
+				if (comp==false)
+					ok = false;
+				Console.WriteLine($"{(comp ? "OK" : "DIFF ")} {result.OldHash} {result.NewHash} {Path.GetFileName(result.Filename)}");
+			}
+			Console.WriteLine();
 
-            //Write new hash entries to file
-            using (TextWriter writer = new StreamWriter(saveFilename))
-            {
-                ser.Serialize(writer, newHashEntries);
-            }
+			if (!ok)
+			{
+				//Start rebuilding by calling vs
+				Console.WriteLine("Rebuilding executable..");
+				using (Process p = new Process())
+				{
+					p.StartInfo.UseShellExecute = false;
+					p.StartInfo.RedirectStandardOutput = true;
+					p.StartInfo.RedirectStandardError = true;
+					p.StartInfo.FileName = buildCommandFile;
+					p.StartInfo.Arguments = buildCommandArg;
+					p.Start();
+					while (true)
+					{
+						string output = p.StandardOutput.ReadLine();
+						if (output == null)
+							break;
+						else
+							Console.WriteLine(output);
+					}
+					Console.WriteLine(p.StandardError.ReadToEnd());
+					p.WaitForExit();
+				}
+				Console.WriteLine("Build job complete");
+			}
+			else
+			{
+				Console.WriteLine("No differences found");
+			}
 
+			//Launching factorio calc
+			Console.WriteLine("\nStarting Factorio calc");
+			using (Process p = new Process())
+			{
+				p.StartInfo.UseShellExecute = true;
+				p.StartInfo.CreateNoWindow = false;
+				p.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
+				p.StartInfo.FileName = targetExe;
+				p.StartInfo.WorkingDirectory = Path.GetDirectoryName(targetExe);
+				p.Start();
+			}
 
-
-
-            Console.WriteLine("Press any key to exit..");
-            Console.ReadKey();
-        }
-    }
+			if (!ok)
+			{
+				//Write new hash entries to file
+				Console.WriteLine("Writing new hashes to file..");
+				using (TextWriter writer = new StreamWriter(saveFilename))
+				{
+					ser.Serialize(writer, newHashEntries);
+				}
+				Console.WriteLine("\nPress any key to exit..");
+				Console.ReadKey();
+			}
+		}
+	}
 }
