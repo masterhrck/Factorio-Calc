@@ -85,7 +85,6 @@ namespace Factorio_calc_Builder
 				{
 					p.StartInfo.UseShellExecute = false;
 					p.StartInfo.RedirectStandardOutput = true;
-					p.StartInfo.RedirectStandardError = true;
 					p.StartInfo.FileName = buildCommandFile;
 					p.StartInfo.Arguments = buildCommandArg;
 					p.Start();
@@ -97,7 +96,6 @@ namespace Factorio_calc_Builder
 						else
 							Console.WriteLine(output);
 					}
-					Console.WriteLine(p.StandardError.ReadToEnd());
 					p.WaitForExit();
 				}
 				Console.WriteLine("Build job complete");
