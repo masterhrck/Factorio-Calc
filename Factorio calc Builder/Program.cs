@@ -22,7 +22,7 @@ namespace Factorio_calc_Builder
 			string targetExe = @"C:\Users\Masterhrck\source\repos\Factorio calc\Factorio calc\Release\Factorio calc.exe";
 			string saveFilename = "hashes.xml";
 			string buildCommandFile = "cmd";
-			string buildCommandArg = @"/C """"C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\IDE\devenv.com"" ""C:\Users\Masterhrck\source\repos\Factorio calc\Factorio solution.sln"" /rebuild Release /project ""C:\Users\Masterhrck\source\repos\Factorio calc\Factorio calc\Factorio calc.vcxproj"" /projectconfig Release""";
+			string buildCommandArg = @"/C """"C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\IDE\devenv.com"" ""C:\Users\Masterhrck\source\repos\Factorio calc\Factorio solution.sln"" /build Release /project ""C:\Users\Masterhrck\source\repos\Factorio calc\Factorio calc\Factorio calc.vcxproj"" /projectconfig Release""";
 			XmlSerializer ser = new XmlSerializer(typeof(List<HashEntry>));
 			List<string> filenames = new List<string>();
 
