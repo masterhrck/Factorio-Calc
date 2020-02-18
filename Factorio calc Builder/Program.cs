@@ -42,10 +42,10 @@ namespace Factorio_calc_Builder
 			foreach (string filename in filenames)
 			{
 				string hashString;
-				using (var stream = File.OpenRead(filename))
+				using (FileStream stream = File.OpenRead(filename))
 				{
-					byte[] hashByte = md5.ComputeHash(stream);
-					hashString = BitConverter.ToString(hashByte).Replace("-", "").ToLowerInvariant();
+					byte[] hashBytes = md5.ComputeHash(stream);
+					hashString = BitConverter.ToString(hashBytes).Replace("-", "").ToLowerInvariant();
 				}
 				newHashEntries.Add(new HashEntry { filename = filename, hash = hashString });
 			}

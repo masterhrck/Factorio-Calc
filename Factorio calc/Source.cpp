@@ -12,8 +12,6 @@ json j;
 float speed = 0;
 vector<string> suggests;
 
-constexpr float defaultSpeed = 0.5;
-
 class Node {
 public:
 	string name;
@@ -72,7 +70,7 @@ string printSuggestions(string query) {
 
 bool isNumber(const string &s) {
 	string::const_iterator it = s.begin();
-	while (it != s.end() && std::isdigit(*it)) ++it;
+	while (it != s.end() && isdigit(*it)) ++it;
 	return !s.empty() && it == s.end();
 }
 
