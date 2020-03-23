@@ -18,8 +18,9 @@ namespace Factorio_calc_Builder
 
 		static void Main(string[] args)
 		{
-			string targetDir = @"C:\Users\Masterhrck\source\repos\Factorio calc\Factorio calc";
-			string targetExe = @"C:\Users\Masterhrck\source\repos\Factorio calc\Factorio calc\Release\Factorio calc.exe";
+			string userDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+			string targetDir = userDir + @"\source\repos\Factorio-calc\Factorio calc";
+			string targetExe = @"\source\repos\Factorio calc\Factorio-calc\Release\Factorio calc.exe";
 			string saveFilename = "hashes.xml";
 			string buildCommandFile = "cmd";
 			string buildCommandArg = @"/C """"C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\IDE\devenv.com"" ""C:\Users\Masterhrck\source\repos\Factorio calc\Factorio solution.sln"" /build Release /project ""C:\Users\Masterhrck\source\repos\Factorio calc\Factorio calc\Factorio calc.vcxproj"" /projectconfig Release""";
